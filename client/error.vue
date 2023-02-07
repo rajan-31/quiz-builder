@@ -1,11 +1,11 @@
 <template>
     <!-- <button @click="handleError">Clear errors</button> -->
     <Navbar />
-    <center>
+    <div>
         <h1>404</h1>
         <p>Page Not Found</p>
         <NuxtLink to="/" >Go Home</NuxtLink>
-    </center>
+    </div>
 </template>
   
 <script setup>
@@ -14,4 +14,4 @@
   })
   
   const handleError = () => clearError({ redirect: '/' })
-</script>  
+</script>

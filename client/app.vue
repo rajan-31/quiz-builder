@@ -1,8 +1,11 @@
 <template>
-<header>
-    <Navbar />
+    <NuxtLoadingIndicator />
     <NuxtLayout>
-        <NuxtPage />
+        <Container>
+            <div>
+                <Navbar />
+                <NuxtPage />
+            </div>
+            </Container>
     </NuxtLayout>
-</header>
 </template>
