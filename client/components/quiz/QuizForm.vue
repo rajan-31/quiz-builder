@@ -2,7 +2,8 @@
 const userName = inject('userName')
 
 const userMessage = ref('');
-const quizLink = ref('');
+const quizId = ref('');
+
 const newQuestion = ref({
     typeOfQuestion: '1',
     text: 'aaaaaaaaaaaa',
@@ -12,6 +13,7 @@ const newQuestion = ref({
     correctMultiple: [],
 });
 
+const quizTitle = ref('Some title');
 const allQuestions = ref([]);
 
 const addOption = () => {
@@ -24,7 +26,8 @@ const addOption = () => {
 const addQuestion = () => {
     let tempQuestion = Object.assign({}, newQuestion.value);
 
-    if (tempQuestion.typeOfQuestion == '') alert('Please select question type')
+    if (allQuestions.value.length === 10) alert('Max 10 questions allowed, delete a question to add new')
+    else if (tempQuestion.typeOfQuestion == '') alert('Please select question type')
     else if (tempQuestion.text.length === 0) alert('Please enter some text in question field')
 
     // necessary to make question valid
@@ -35,13 +38,15 @@ const addQuestion = () => {
     ) alert('Please choose correct answer(s)')
     else {
         delete tempQuestion['tempOptionText'];
-        tempQuestion.typeOfQuestion == '1' ? delete tempQuestion.correctMultiple : delete tempQuestion['correctOne']
+        tempQuestion.typeOfQuestion == '1' ? delete tempQuestion['correctMultiple'] : delete tempQuestion['correctOne']
         allQuestions.value.push(tempQuestion);
     }
 }
 
 const submitQuiz = () => {
-    if (allQuestions.value.length === 0) alert('Please add atleast 1 question');
+
+    if (quizTitle.value.length === 0) alert('Please add a title to the quiz');
+    else if (allQuestions.value.length === 0) alert('Please add atleast 1 question');
     else {
         const tempQuestions = JSON.parse(JSON.stringify(allQuestions.value));
         tempQuestions
@@ -65,18 +70,19 @@ const submitQuiz = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    title: quizTitle.value,
                     questions: tempQuestions
                 }),
 
             })
             .then(res => res.json())
             .then(data => {
-                if (data.newQuiz) {
-                    quizLink.value = data.newQuiz;
+                if (data.newQuizId) {
+                    quizId.value = data.newQuizId;
                 }
                 else {
                     console.log(data)
-                    alert('Quiz submit failed! Try again.');
+                    alert('Quiz submission failed! Try again.');
                 }
             });
     }
@@ -89,6 +95,8 @@ const submitQuiz = () => {
     </ClientOnly>
 
     <div v-if="userName != ''">
+        <div><input type="text" v-model="quizTitle" placeholder="Quiz title"></div>
+
         <h1>Add Questions</h1>
 
         <select v-model="newQuestion.typeOfQuestion">
@@ -126,7 +134,8 @@ const submitQuiz = () => {
 
         <div v-if="userMessage != ''">{{ userMessage }}</div>
 
-        <div v-if="quizLink != ''"> Your quiz is published, <NuxtLink :to="'/quiz/' + quizLink">see here</NuxtLink>
+        <div v-if="quizId != ''"> Your quiz is published, <NuxtLink :to="'/quiz/' + quizId">see here
+            </NuxtLink>
         </div>
     </div>
 </template>

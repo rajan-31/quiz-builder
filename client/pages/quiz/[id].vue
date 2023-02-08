@@ -2,7 +2,7 @@
 const route = useRoute();
 
 const quizQuestions = ref([]);
-const quizOwner = ref('');
+const quizTitle = ref('');
 
 const markedAnswers = ref([]);
 const quizScore = ref(-1);
@@ -17,14 +17,12 @@ onBeforeMount(() => {
         .then(res => res.text())
         .then(raw => raw ? JSON.parse(raw) : {})
         .then(data => {
-            if (data.owner) {
+            if (data.title) {
                 quizQuestions.value = data.questions;
-                quizOwner.value = data.owner;
+                quizTitle.value = data.title;
 
                 // fill with empty arrays
                 markedAnswers.value = quizQuestions.value.map(question => []);
-            } else {
-                quizOwner.value = 'Not Found'
             }
         })
 });
@@ -58,21 +56,24 @@ const handleSubmitQuiz = () => {
 }
 </script>
 <template>
+    <h1 v-if="quizTitle">Quiz Title: {{ quizTitle }}</h1>
     <div v-if="quizScore > -1">Your scored: {{ quizScore }}/{{ quizQuestions.length }}</div>
     <div v-else>
-        <div v-if="quizOwner == 'Not Found'">Invalid Quiz ID</div>
+        <div v-if="quizTitle == ''">Invalid Quiz ID</div>
         <div v-else>
             <div v-for="(question, index1) in quizQuestions" class="question-block">
                 <div><span>Q {{ index1+ 1 }})</span> {{ question.text }}</div>
 
                 <div v-if="question.typeOfQuestion == 1">
+                    <div>(One correct answer)</div>
                     <div v-for="(option, index2) in question.options">
                         <input type="radio" :id="'Q' + index1 + '-' + index2" :value="option"
-                            v-model="markedAnswers[index1][0]" />
+                        v-model="markedAnswers[index1][0]" />
                         <label :for="'Q' + index1 + '-' + index2">{{ option }}</label>
                     </div>
                 </div>
                 <div v-else>
+                    <div>(One or more correct answers)</div>
                     <div v-for="(option, index2) in question.options">
                         <input type="checkbox" :id="'Q' + index1 + '-' + index2" :value="option"
                             v-model="markedAnswers[index1]">

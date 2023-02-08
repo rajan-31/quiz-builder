@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     name: String,
-    quizes: [{
+    quizzes: [{
         type: String,
     }]
 });
