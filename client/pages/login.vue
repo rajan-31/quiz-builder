@@ -2,11 +2,16 @@
 const router = useRouter();
 
 const loginFormData = ref({
-    email: 'user1@gmail.com',
-    password: '123456'
+    email: '',
+    password: ''
 });
 
 const userName = inject('userName');
+
+const handleInputChange = (event) => {
+    const value = event.target.value;
+    loginFormData.value[event.target.id] = value;
+}
 
 const submitLogin = () => {
     const tempData = Object.assign({}, loginFormData.value);
@@ -31,7 +36,7 @@ const submitLogin = () => {
             .then(data => {
                 if (data.userName && data.userName.length !== 0) {
                     userName.value = data.userName;
-                    router.push('/quiz/new');
+                    router.back();
                 }
                 else {
                     console.log(data)
@@ -42,10 +47,27 @@ const submitLogin = () => {
 }
 </script>
 <template>
-    <input type="email" :value="loginFormData.email" placeholder="Email">
-    <input type="password" :value="loginFormData.password" placeholder="Password">
-    <button @click="submitLogin()">Login</button>
-
-    <div>Don't have an account? <NuxtLink to="/register">register here</NuxtLink>
+    <div>
+        <div class="flex flex-wrap px-5 pt-5 pb-2 font-medium text-base">
+            <div class="p-2 w-full sm:w-1/2">
+                <FormInputLabel label-text="Email" label-for="email" />
+                <FormInputField input-type="email" v-on:inputChange="handleInputChange" input-id="email"
+                    :input-value="loginFormData.email" input-placeholder="Email" />
+            </div>
+            <div class="p-2  w-full sm:w-1/2">
+                <FormInputLabel label-text="Password" label-for="password" />
+                <FormInputField input-type="password" v-on:inputChange="handleInputChange" input-id="password"
+                    :input-value="loginFormData.password" input-placeholder="Password" />
+            </div>
+        </div>
+    
+        <div class="px-7">
+            <FormButton btn-color="green" btn-text="Login" :btn-click="submitLogin" />
+    
+            <div class="mt-2">Don't have an account? <NuxtLink to="/register"
+                    class="underline decoration-orange-600 decoration-2 hover:bg-orange-600 hover:text-white"> Signup
+                </NuxtLink>
+            </div>
+        </div>
     </div>
 </template>

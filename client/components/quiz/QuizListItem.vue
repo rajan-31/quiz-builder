@@ -1,8 +1,12 @@
 <script setup>
+import CrossSVG from '../general/CrossSVG.vue';
+
 defineProps({
     quizTitle: String,
     quizId: String
 });
+
+const quizList = inject('quizList');
 
 const handleDeleteQuiz = (event) => {
     const tempId = event.target.getAttribute('data-id');
@@ -21,6 +25,7 @@ const handleDeleteQuiz = (event) => {
             .then(res => {
                 if (res.status === 200) {
                     event.target.parentElement.remove();
+                    quizList.value = quizList.value.filter(item => item.value != tempId);
                 }
                 else {
                     alert('Not able to delete quiz');
@@ -30,8 +35,12 @@ const handleDeleteQuiz = (event) => {
 }
 </script>
 <template>
-    <div>
-        <NuxtLink :to="'/quiz/' + quizId">{{ quizTitle }}</NuxtLink>
-        &nbsp;<button :data-id="quizId" @click="handleDeleteQuiz">X</button>
+    <div class="flex flex-row my-1 bg-blue-200 hover:bg-blue-300 rounded-lg">
+        <NuxtLink :to="'/quiz/' + quizId" class="block grow py-2 pl-5">
+            {{ quizTitle }}
+        </NuxtLink>
+        <button :data-id="quizId" @click="handleDeleteQuiz" class="bg-red-200 hover:bg-red-400 rounded-r-lg">
+            <CrossSVG />
+        </button>
     </div>
 </template>

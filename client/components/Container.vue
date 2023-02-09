@@ -1,18 +1,5 @@
-<script setup>
-const userName = ref('');
-provide('userName', userName);
-
-onMounted(() => {
-    fetch('http://localhost:3001/api/v1/user', {
-        method: 'GET',
-        credentials: 'include',
-    })
-        .then(res => res.json())
-        .then(data => {
-            userName.value = data.userName;
-        });
-});
-</script>
 <template>
-    <slot></slot>
+    <div class="px-3 py-3 mx-auto w-full md:w-[750px] lg:w-[900px]">
+        <slot></slot>
+    </div>
 </template>

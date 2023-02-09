@@ -56,6 +56,7 @@ const handleSubmitQuiz = () => {
 }
 </script>
 <template>
+<div>
     <h1 v-if="quizTitle">Quiz Title: {{ quizTitle }}</h1>
     <div v-if="quizScore > -1">Your scored: {{ quizScore }}/{{ quizQuestions.length }}</div>
     <div v-else>
@@ -82,9 +83,10 @@ const handleSubmitQuiz = () => {
                 </div>
             </div>
 
-            <div v-if="quizScore == -1"><button @click="handleSubmitQuiz()">Submit Quiz</button></div>
-        </div>
-    </div>
+            <div v-if="quizScore == -1"><button @click="handleSubmitQuiz">Submit Quiz</button></div>
+            </div>
+            </div>
+            </div>
 </template>
 <style>
 .question-block {
