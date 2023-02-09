@@ -1,36 +1,25 @@
 <script setup>
 const userName = inject('userName');
-const quizList = ref([]);
+const quizList = inject('quizList')
 
-onBeforeMount(() => {
-    if (userName != '') {
-        fetch('http://localhost:3001/api/v1/quiz/list',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-
-            })
-            .then(res => res.text())
-            .then(raw => raw ? JSON.parse(raw) : {})
-            .then(data => {
-                if (data.quizzes) {
-                    quizList.value = data.quizzes
-                }
-            });
-    }
-});
 </script>
 <template>
-<h1>Quiz Builder</h1>
+<div>
+    <div class="py-2">
+        <span v-if="userName">Welcome <span class="font-bold text-orange-600">{{ userName }}</span>
+        </span>&nbsp;
+    </div>
 
-<p>Create your quizzes and share with friends!</p>
-<NuxtLink to="/quiz/new">Create New Quiz</NuxtLink>
+    <h1 class="text-center font-medium text-5xl mt-2 mb-8">Quiz Builder</h1>
+    <div class="text-center">
+        <NuxtLink to="/quiz/new"
+            class="inline-block py-1.5 px-3 bg-violet-300/70 hover:bg-violet-300 rounded-full hover:shadow-lg">
+            Create New Quiz
+        </NuxtLink>
+    </div>
 
-<div v-if="userName != ''">
-    <QuizList :quiz-list="quizList" />
+    <div v-if="userName != ''">
+        <QuizList :quiz-list="quizList" />
+    </div>
 </div>
 </template>

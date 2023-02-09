@@ -2,6 +2,11 @@
 const router = useRouter();
 const userName = inject('userName');
 
+const navItems = [
+    { text: 'Home', link: '/' },
+    { text: 'About', link: '/about' }
+]
+
 const handleLogout = () => {
     fetch('http://localhost:3001/api/v1/logout',
         {
@@ -25,21 +30,27 @@ const handleLogout = () => {
 };
 </script>
 <template>
-    <nav>
-        <ul>
-            <li>
-                <NuxtLink to="/">Home</NuxtLink>
+    <nav class="p-0.5 bg-sky-200 rounded-b-lg shadow-md">
+        <ul class="flex flex-row justify-between w-full md:w-[750px] lg:w-[900px] mx-auto px-3">
+            <li v-for="item in navItems" class="p-2">
+                <NuxtLink :to="item.link" class="hover:bg-sky-300/40 inline-block py-1.5 px-4 rounded w-[84px] text-center">
+                    {{ item.text }}
+                </NuxtLink>
             </li>
-            <li>
-                <NuxtLink to="/about">About</NuxtLink>
-            </li>
-            <ClientOnly fallback-tag="span" fallback="Showing User info">
-                <li v-if="userName">{{ userName }}</li>
-                <li v-if="userName"><button @click="handleLogout">Logout</button></li>
-                <li v-else>
-                    <NuxtLink to="/login">Login</NuxtLink>
+            <ClientOnly>
+                <template #fallback>
+                    <li class="p-2">
+                        <button class="bg-transparent py-1.5 px-4 rounded w-[84px] text-center hover:shadow-lg">&nbsp;</button>
+                    </li>
+                </template>
+                <li v-if="userName" class="p-2">
+                    <button @click="handleLogout"
+                        class="hover:bg-red-300/70 py-1.5 px-4 rounded w-[84px] text-center hover:shadow-lg">Logout</button>
                 </li>
-            
+                <li v-else class="p-2">
+                    <NuxtLink to="/login" class="hover:bg-emerald-300/60 inline-block py-1.5 px-4 rounded w-[84px] text-center">
+                        Login</NuxtLink>
+                </li>
             </ClientOnly>
         </ul>
     </nav>
