@@ -1,9 +1,13 @@
 # Quiz Builder
 
+__*Watch demo video [here](/demo/demo-video.mp4)*__
+
+<br />
+
 This application has two components
 
 1. Client - Nuxt.js (Single Page Application), Tailwindcss
-2. Server - Express.js, MongoDB (API Server)
+2. Server - Express.js, MongoDB (API Server - REST)
 
 ### Functionalities
 
@@ -29,23 +33,23 @@ This application has two components
 
 Home Page
 
-![](/screenshots/Home.png)
+![](/demo/Home.png)
 
 Login Page
 
-![](/screenshots/Login.png)
+![](/demo/Login.png)
 
 Registration Page
 
-![](/screenshots/Register.png)
+![](/demo/Register.png)
 
 New Quiz Page
 
-![](/screenshots/Quiz%20Form.png)
+![](/demo/Quiz%20Form.png)
 
 Quiz Page
 
-![](/screenshots/Quiz.png)
+![](/demo/Quiz.png)
 
 <!-- 
 ### Goals
