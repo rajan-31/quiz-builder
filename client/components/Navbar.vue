@@ -1,5 +1,7 @@
 <script setup>
 const router = useRouter();
+const config = useRuntimeConfig()
+
 const userName = inject('userName');
 
 const navItems = [
@@ -8,7 +10,7 @@ const navItems = [
 ]
 
 const handleLogout = () => {
-    fetch('http://localhost:3001/api/v1/logout',
+    fetch(config.public.apiUrl + '/logout',
         {
             method: 'POST',
             credentials: 'include',

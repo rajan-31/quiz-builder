@@ -1,4 +1,8 @@
 <script setup>
+const router = useRouter();
+const config = useRuntimeConfig()
+
+
 const registerFormData = ref({
     email: '',
     name: '',
@@ -8,19 +12,29 @@ const registerFormData = ref({
 
 const userName = inject('userName');
 
+onMounted(() => {
+    if (userName && userName.value.length > 0) router.push('/');
+})
+
 const handleInputChange = (event) => {
     const value = event.target.value;
     registerFormData.value[event.target.id] = value;
 }
 
+const looksLikeMail = (str) => {
+    var lastAtPos = str.lastIndexOf('@');
+    var lastDotPos = str.lastIndexOf('.');
+    return (lastAtPos < lastDotPos && lastAtPos > 0 && str.indexOf('@@') == -1 && lastDotPos > 2 && (str.length - lastDotPos) > 2);
+}
+
 const submitRegister = () => {
     const tempData = Object.assign({}, registerFormData.value);
-    if (tempData.email.length === 0) alert('Please enter valid email');
-    else if (tempData.password.length < 6) alert('Please enter valid password');
+    if (!looksLikeMail(tempData.email)) alert('Please enter valid email');
+    else if (tempData.password.length < 6) alert('Please enter atlease 6 characters long password');
     else if (tempData.password != tempData.confirmPassword) alert('Password missmatched');
     else if (tempData.name.length === 0) alert('Please enter valid name')
     else {
-        fetch('http://localhost:3001/api/v1/register',
+        fetch(config.public.apiUrl + '/register',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -37,11 +51,13 @@ const submitRegister = () => {
             })
             .then(res => res.json())
             .then(data => {
-                if (data.userName && data.userName.length !== 0)
+                if (data.userName && data.userName.length !== 0) {
                     userName.value = data.userName;
+                    router.push('/login');
+                }
                 else {
                     console.log(data)
-                    alert('Inavlid credentials');
+                    alert(data.message);
                 }
             });
     }
@@ -62,9 +78,9 @@ const submitRegister = () => {
             </div>
     
             <div class="p-2  w-full sm:w-1/2">
-                <FormInputLabel label-text="Password" label-for="password" />
+                <FormInputLabel label-text="Password (atleast 6 characters)" label-for="password" />
                 <FormInputField input-type="password" v-on:inputChange="handleInputChange" input-id="password"
-                    :input-value="registerFormData.password" input-placeholder="Password" />
+                    :input-value="registerFormData.password" input-placeholder="Password (atleast 6 characters)" />
             </div>
             <div class="p-2  w-full sm:w-1/2">
                 <FormInputLabel label-text="Confirm Password" label-for="confirmPassword" />

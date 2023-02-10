@@ -14,9 +14,7 @@ const User = require('./models/user');
 // Allow client CORS request
 const cors = require('cors');
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-  ],
+  origin: true,
   credentials: true,
 }
 app.use(cors(corsOptions));
@@ -59,9 +57,8 @@ passport.deserializeUser(function (user, done) {
     done(null, user);
 });
 
-// select version
-const api_version = process.env.API_VERSION;
-app.use(`/api/${api_version}/`, require(`./routes/${api_version}`));
+// select version OR add other versions below
+app.use(`/api/v1/`, require(`./routes/v1`));
 
 const port = process.env.API_PORT;
-app.listen(port || 3001, () => console.log(`API Server Running | Port: ${port}, API Version: ${api_version}`));
+app.listen(port || 3001, () => console.log(`API Server Running | Port: ${port}`));

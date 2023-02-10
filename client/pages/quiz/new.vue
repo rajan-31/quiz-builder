@@ -2,4 +2,4 @@
 </script>
 <template>
     <QuizForm />
-</template>
+</template>QuizF

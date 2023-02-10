@@ -36,12 +36,12 @@
 \
 \
 
-- Application needs to have client and server components use NUXT js.
-- server component needs to expose a GraphQL or RESTful API. 
-- the client application needs to be a single-page application
-- fully server-side rendered fragment frameworks such as Turbolinks/Hotwire and similar is NOT acceptable
-- The API should not be coupled with the front-end application
-- if somebody wanted to build a different UI (eg. a mobile app) for the service - they should be able to do so without the server code being modified
+- ~~Application needs to have client and server components use NUXT js.~~
+- ~~server component needs to expose a GraphQL or RESTful API. ~~
+- ~~he client application needs to be a single-page application~~
+- ~~fully server-side rendered fragment frameworks such as Turbolinks/Hotwire and similar is NOT acceptable~~
+- ~~The API should not be coupled with the front-end application~~
+- ~~if somebody wanted to build a different UI (eg. a mobile app) for the service - they should be able to do so without the server code being modified~~
 
 \
 \
