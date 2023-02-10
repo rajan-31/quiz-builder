@@ -26,7 +26,7 @@ const handleDeleteQuiz = (event) => {
             .then(res => {
                 if (res.status === 200) {
                     event.target.parentElement.remove();
-                    quizList.value = quizList.value.filter(item => item.value != tempId);
+                    quizList.value.splice(quizList.value.findIndex(item => item._id == tempId), 1);
                 }
                 else {
                     alert('Not able to delete quiz');

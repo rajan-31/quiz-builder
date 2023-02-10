@@ -1,11 +1,11 @@
 <script setup>
-import CrossSVG from '../general/CrossSVG.vue';
 import OptionOne from '../question/OptionOne.vue';
 
 const route = useRoute();
 const config = useRuntimeConfig()
 
 const userName = inject('userName')
+const quizList = inject('quizList', {});
 
 
 const quizId = ref('');
@@ -139,8 +139,10 @@ const submitQuiz = () => {
             })
             .then(res => res.json())
             .then(data => {
+
                 if (data.newQuizId) {
                     quizId.value = data.newQuizId;
+                    quizList.value.push(data.newQuiz);
                     newQuestion.value = {
                         quizTitle: '',
                         typeOfQuestion: '',

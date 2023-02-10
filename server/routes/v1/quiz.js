@@ -62,7 +62,13 @@ router.post('/quiz', (req, res) => {
                         console.error(err2);
                         res.status(500).send({ msg: 'Server Error' })
                     } else {
-                        res.status(200).send({ newQuizId: newQuiz._id })
+                        res.status(200).send({
+                            newQuizId: newQuiz._id, newQuiz: {
+                                _id: quiz._id,
+                                title: quiz.title,
+                                owner: quiz.owner,
+                            }
+                        })
                     }
                 });
             });
