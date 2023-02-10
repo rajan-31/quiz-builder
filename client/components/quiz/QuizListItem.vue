@@ -1,5 +1,6 @@
 <script setup>
 import CrossSVG from '../general/CrossSVG.vue';
+const config = useRuntimeConfig()
 
 defineProps({
     quizTitle: String,
@@ -10,9 +11,9 @@ const quizList = inject('quizList');
 
 const handleDeleteQuiz = (event) => {
     const tempId = event.target.getAttribute('data-id');
-
+    if (confirm('Press OK to continue'))
     if (tempId) {
-        fetch('http://localhost:3001/api/v1/quiz/' + tempId,
+        fetch(config.public.apiUrl + '/quiz/' + tempId,
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -35,7 +36,7 @@ const handleDeleteQuiz = (event) => {
 }
 </script>
 <template>
-    <div class="flex flex-row my-1 bg-blue-200 hover:bg-blue-300 rounded-lg">
+    <div class="flex flex-row my-2 bg-blue-200 hover:bg-blue-300 rounded-lg">
         <NuxtLink :to="'/quiz/' + quizId" class="block grow py-2 pl-5">
             {{ quizTitle }}
         </NuxtLink>

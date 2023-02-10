@@ -5,8 +5,10 @@ provide('userName', userName);
 const quizList = ref([]);
 provide('quizList', quizList);
 
+const config = useRuntimeConfig()
+
 onMounted(() => {
-    fetch('http://localhost:3001/api/v1/user', {
+    fetch(config.public.apiUrl + '/user', {
         method: 'GET',
         credentials: 'include',
     })
@@ -14,7 +16,7 @@ onMounted(() => {
         .then(data => {
             userName.value = data.userName;
             if (data.userName) {
-                fetch('http://localhost:3001/api/v1/quiz/list',
+                fetch(config.public.apiUrl + '/quiz/list',
                     {
                         method: 'GET',
                         credentials: 'include',
@@ -36,14 +38,15 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div class="h-full bg-gray-100">
+    <div class="h-[100%]">
         <slot />
     </div>
 </template>
-<style>
+<style lang="postcss" scopoed>
 html,
 body,
 #__nuxt {
     height: 100%;
+    @apply bg-gray-100;
 }
 </style>

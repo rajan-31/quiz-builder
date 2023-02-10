@@ -1,32 +1,50 @@
 <script setup>
 import CrossSVG from '../general/CrossSVG.vue';
+import OptionOne from '../question/OptionOne.vue';
 
 const route = useRoute();
+const config = useRuntimeConfig()
+
 const userName = inject('userName')
+
 
 const quizId = ref('');
 const quizLink = ref();
+let tempOrigin = ''
 
 const newQuestion = ref({
-    quizTitle: 'You can also use variant modifiers to target media queries like responsive breakpoints, dark mode',
-    typeOfQuestion: '2',
-    text: 'Prefers-reduced-motion, and more. For example, use md:text-base to apply the text-base utility at only medium?',
-    options: ['Screen sizes and above', 'Prefers-reduced-motion', 'You can also use variant modifiers'],
-    tempOptionText: 'And more. For example, use md',
+    quizTitle: '',
+    typeOfQuestion: '',
+    text: '',
+    options: [],
+    tempOptionText: '',
     correctOne: '',
     correctMultiple: [],
 });
 
-const allQuestions = ref([{ "typeOfQuestion": "2", "text": "Prefers-reduced-motion, and more. For example, use md:text-base to apply the text-base utility at only medium?", "options": ["Screen sizes and above", "Prefers-reduced-motion", "You can also use variant modifiers", "And more. For example, use md"], "correctMultiple": ["Prefers-reduced-motion"] },
-{ "typeOfQuestion": "2", "text": "Prefers-reduced-motion, and more. For example, use md:text-base to apply the text-base utility at only medium?", "options": ["Screen sizes and above", "Prefers-reduced-motion", "You can also use variant modifiers", "And more. For example, use md"], "correctMultiple": ["Prefers-reduced-motion", "You can also use variant modifiers"] }]);
+const allQuestions = ref([]);
+
+provide('allQuestions', allQuestions);
 
 onMounted(() => {
-    quizLink.value = window.location.origin;
+    tempOrigin = window.location.origin;
+    console.log(tempOrigin)
 });
 
 const handleInputChange = (event) => {
     const value = event.target.value;
     newQuestion.value[event.target.id] = value;
+}
+
+const handleRadiochange = (event) => {
+    const checked = event.target.checked;
+    if (checked) newQuestion.value.correctOne = event.target.value;
+}
+
+const handleSelectChange = (event) => {
+    const checked = event.target.checked;
+    if (checked) newQuestion.value.correctMultiple.push(event.target.value)
+    else newQuestion.value.correctMultiple = newQuestion.value.correctMultiple.filter(item => item != event.target.value)
 }
 
 const handleDeleteOption = (event) => {
@@ -37,12 +55,21 @@ const handleDeleteOption = (event) => {
     newQuestion.value.correctMultiple = newQuestion.value.correctMultiple.filter(item => item != tempText);
 }
 
+const handleDeleteQuestion = (index) => {
+    console.log(index)
+    allQuestions.value.splice(index, 1);
+}
+
 const addOption = () => {
     // otherwise oprtions are not visisble
-    if (newQuestion.value.typeOfQuestion == '') alert('Please select question type')
+    if (newQuestion.value.tempOptionText.length < 1) alert("Can't add empty option")
+    else if (newQuestion.value.typeOfQuestion == '') alert('Please select question type')
     else if (newQuestion.value.options.includes(newQuestion.value.tempOptionText)) alert('Duplicate option not allowed')
     else if (newQuestion.value.options.length === 5) alert('Question can have maximum 5 options')
-    else newQuestion.value.options.push(newQuestion.value.tempOptionText);
+    else {
+        newQuestion.value.options.push(newQuestion.value.tempOptionText);
+        newQuestion.value.tempOptionText = '';
+    }
 }
 
 const addQuestion = () => {
@@ -63,10 +90,22 @@ const addQuestion = () => {
         delete tempQuestion['tempOptionText'];
         tempQuestion.typeOfQuestion == '1' ? delete tempQuestion['correctMultiple'] : delete tempQuestion['correctOne']
         allQuestions.value.push(tempQuestion);
+        newQuestion.value = {
+            quizTitle: newQuestion.value.quizTitle,
+            typeOfQuestion: '',
+            text: '',
+            options: [],
+            tempOptionText: '',
+            correctOne: '',
+            correctMultiple: [],
+        }
+        alert('New question added to list')
     }
 }
 
 const submitQuiz = () => {
+    quizId.value = '';
+    quizLink.value = '';
 
     if (newQuestion.value.quizTitle.length === 0) alert('Please add a title to the quiz');
     else if (allQuestions.value.length === 0) alert('Please add atleast 1 question');
@@ -84,7 +123,7 @@ const submitQuiz = () => {
                 return item
             })
 
-        fetch('http://localhost:3001/api/v1/quiz',
+        fetch(config.public.apiUrl + '/quiz',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -113,7 +152,7 @@ const submitQuiz = () => {
                     }
                     allQuestions.value = []
 
-                    quizLink.value = quizLink.value + '/quiz/' + data.newQuizId
+                    quizLink.value = tempOrigin + '/quiz/' + data.newQuizId
                 }
                 else {
                     console.log(data)
@@ -166,49 +205,24 @@ const submitQuiz = () => {
                     <FormInputField input-type="text" input-id="tempOptionText" v-on:inputChange="handleInputChange"
                         :input-value="newQuestion.tempOptionText" input-placeholder="New Option" />
                 </div>
+            </div>
+            <div class="p-2 mb-10">
+                <FormButton :btn-click="addOption" btn-color="sky" btn-text="Add Option" />
+                <span class="px-2">&nbsp;</span>
+                <FormButton :btn-click="addQuestion" btn-color="indigo" btn-text="Add Question" />
+                <div v-if="newQuestion.options.length > 0" class="italic mt-5">Options
+                    {{ newQuestion.typeOfQuestion == 1 ? '(Select 1 correct option)' : '(Select 1 or more correct options)'}}</div>
+                <div v-if="newQuestion.typeOfQuestion == '1'" class="mt-3 mb-10">
+                    <OptionOne :options="newQuestion.options" :correct-one="newQuestion.correctOne"
+                        :handle-delete-option="handleDeleteOption" v-on:radioChange="handleRadiochange" />
                 </div>
-                <div class="p-2 mb-5">
-                    <FormButton :btn-click="addOption" btn-color="sky" btn-text="Add Option" />
-                    <span class="px-2">&nbsp;</span>
-                    <FormButton :btn-click="addQuestion" btn-color="indigo" btn-text="Add Question" />
-                    <div v-if="newQuestion.options.length > 0" class="italic mt-5">Options</div>
-                    <div v-if="newQuestion.typeOfQuestion == '1'" class="mt-3 mb-5">
-                        <div v-for="(option, index) in newQuestion.options">
-                            <div class="my-1 flex flex-row rounded-lg"
-                                :class="(option == newQuestion.correctOne ? 'bg-green-300 hover:bg-green-400' : 'bg-gray-300 hover:bg-gray-400')">
-                                <div class="grow">
-                                    <input type="radio" :id="'type1-' + index" :value="option" v-model="newQuestion.correctOne"
-                                        class="appearance-none" />
-                                    <label :for="'type1-' + index" class="w-full inline-block p-2 pl-5 cursor-pointer rounded-lg rounded-r-none">{{
-                                        option
-                                        }}</label>
-                                </div>
-                                <button :data-text="option" @click="handleDeleteOption" class="bg-red-200 hover:bg-red-400 rounded-r-lg">
-                                    <CrossSVG />
-                                </button>
-                            </div>
-                            </div>
-                            </div>
-                            <div v-else-if="newQuestion.typeOfQuestion == '2'" class="mt-3 mb-5">
-                                <div v-for="(option, index) in newQuestion.options" class="my-1 flex flex-row rounded-lg"
-                                    :class="(newQuestion.correctMultiple.includes(option) ? 'bg-green-300 hover:bg-green-400' : 'bg-gray-300 hover:bg-gray-400')">
-                                    <div class="grow">
-                                        <input type="checkbox" :id="'type2-' + index" :value="option" v-model="newQuestion.correctMultiple"
-                                            class="appearance-none">
-                                        <label :for="'type2-' + index"
-                                            class="w-full inline-block p-2 pl-5 cursor-pointer rounded-lg rounded-r-none">{{
-                                            option
-                                            }}</label>
-                                    </div>
-                            <button :data-text="option" @click="handleDeleteOption" class="bg-red-200 hover:bg-red-400 rounded-r-lg">
-                                <CrossSVG />
-                            </button>
-                        </div>
-                    </div>
+                <div v-else-if="newQuestion.typeOfQuestion == '2'" class="mt-3 mb-10">
+                    <QuestionOptionMultiple :options="newQuestion.options" :correct-multiple="newQuestion.correctMultiple"
+                        :handle-delete-option="handleDeleteOption" v-on:selectChange="handleSelectChange" />
+                </div>
+                <div v-if="allQuestions.length > 0" class="my-2">
                     <FormButton :btn-click="submitQuiz" btn-color="orange" btn-text="Submit Quiz" />
                 </div>
-            <div>
-                <div v-for="(question, index) in allQuestions">{{ question }}</div>
             </div>
             <div v-if="quizId != ''" class="px-2 pt-5">
                 <div class="bg-fuchsia-200 p-5 rounded text-lg text-center"> Your quiz is published,
@@ -217,9 +231,20 @@ const submitQuiz = () => {
                     </NuxtLink> or copy this link <span
                         class="py-1 px-1 break-all rounded focus:outline-none select-all bg-white/50"
                         @focus="$event.target.select()">{{
-                        quizLink }}</span>
+                        quizLink
+                        }}</span>
                 </div>
             </div>
-            </div>
+            <div v-if="allQuestions.length > 0">
+                <div class="px-2">
+                    <h1 class="text-2xl text-center my-2">Questions List</h1>
+                    <hr>
+                </div>
+                <div v-for="(question, index) in allQuestions">
+                    <QuizQuestion :index="index" :question="question" :delete-btn="true" :show-correct="true" />
+                </div>
+                </div>
+                    
+        </div>
     </div>
-</template>green
+</template>

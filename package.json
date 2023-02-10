@@ -1,0 +1,12 @@
+{
+  "name": "quiz-builder",
+  "version": "1.0.0",
+  "description": "A simple quiz builder",
+  "scripts": {
+    "start": "NODE_ENV=production; npm run start:client & npm run start:server",
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && npm start"
+  },
+  "author": "Rajan",
+  "license": "ISC"
+}

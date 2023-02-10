@@ -3,10 +3,10 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
     res.json({
-        msg: 'OK',
+        message: 'OK',
         timestamp: new Date(),
         user: req.user,
-        session: req.session
+        api_version: process.env.API_VERSION
     });
 });
 router.use('/', require('./auth'));

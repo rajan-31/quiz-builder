@@ -1,5 +1,4 @@
 <template>
-    <!-- <button @click="handleError">Clear errors</button> -->
     <Navbar />
     <div>
         <h1>404</h1>

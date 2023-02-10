@@ -1,5 +1,7 @@
 <script setup>
 const router = useRouter();
+const config = useRuntimeConfig()
+
 
 const loginFormData = ref({
     email: '',
@@ -8,17 +10,27 @@ const loginFormData = ref({
 
 const userName = inject('userName');
 
+onMounted(() => {
+    if (userName && userName.value.length > 0) router.push('/');
+})
+
 const handleInputChange = (event) => {
     const value = event.target.value;
     loginFormData.value[event.target.id] = value;
 }
 
+const looksLikeMail = (str) => {
+    var lastAtPos = str.lastIndexOf('@');
+    var lastDotPos = str.lastIndexOf('.');
+    return (lastAtPos < lastDotPos && lastAtPos > 0 && str.indexOf('@@') == -1 && lastDotPos > 2 && (str.length - lastDotPos) > 2);
+}
+
 const submitLogin = () => {
     const tempData = Object.assign({}, loginFormData.value);
-    if (tempData.email.length === 0) alert('Please enter valid email');
-    else if (tempData.password.length < 6) alert('Please enter valid password');
+    if (!looksLikeMail(tempData.email)) alert('Please enter valid email');
+    else if (tempData.password.length < 6) alert('Please enter atleast 6 chracters long password');
     else {
-        fetch('http://localhost:3001/api/v1/login',
+        fetch(config.public.apiUrl + '/login',
             {
                 method: 'POST',
                 credentials: 'include',
