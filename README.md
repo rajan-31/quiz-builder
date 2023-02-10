@@ -1,5 +1,53 @@
 # Quiz Builder
 
+This application has two components
+
+1. Client - Nuxt.js (Single Page Application), Tailwindcss
+2. Server - Express.js, MongoDB (API Server)
+
+### Functionalities
+
+- User login and registration using email
+- Logged in users can view quiz list and create new quizzes
+- Permalink for every quiz (6 characters unique ID)
+- Guest users can take quizzes with permalink
+- API server now serving version 1 (client SPA using it)
+- New API versions can be added without breaking previous versions
+
+### Capabilities
+
+- No limit for creating quizzes
+- No limit for taking/solving quizzes
+- Minimum 1 and max 10 questions in a quiz
+- Question types: single option correct, multple options correct
+
+### API Documentation
+
+(To be added)
+
+### Screenshots
+
+Home Page
+
+![](/screenshots/Home.png)
+
+Login Page
+
+![](/screenshots/Login.png)
+
+Registration Page
+
+![](/screenshots/Register.png)
+
+New Quiz Page
+
+![](/screenshots/Quiz%20Form.png)
+
+Quiz Page
+
+![](/screenshots/Quiz.png)
+
+<!-- 
 ### Goals
 
 - ~~allow authenticated users to create their own quizzes~~
@@ -46,12 +94,14 @@
 \
 \
 
-- Be mindful of the edge cases and unexpected scenarios.
-- Be mindful of security and data validation
+- ~~Be mindful of the edge cases and unexpected scenarios.~~
+- ~~Be mindful of security and data validation~~
 
 \
 \
 
-- Short project video - after you are done, please provide us with a simple and short video recording of the functionality
-- GIT repository
+- ~~Short project video - after you are done, please provide us with a simple and short video recording of the functionality~~
+- ~~GIT repository~~
 - 
+
+ -->
