@@ -22,7 +22,7 @@ router.post('/register', (req, res) => {
     const _password = req.body.password;
     const _name = req.body.name;
 
-    if (looksLikeMail(_email && _password.length > 5)) {
+    if (looksLikeMail(_email) && _password.length > 5) {
         User.register(new User({ email: _email, name: _name }), _password, (err, user) => {
             if (err) {
                 if (err.name == "UserExistsError") {

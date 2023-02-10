@@ -34,8 +34,15 @@ const handleSelectChange = (event) => {
             <div class="">Q{{ props.index + 1 }}.</div>
             <div class="pl-2">{{ question.text }}</div>
         </div>
-        <div v-if="deleteBtn" class="text-right">
-            <FormButton btn-text="Delete" btn-color="red" @click="deleteQuestion(props.index)" />
+        <div class="flex flex-row justify-between">
+            <div class="p-2 font-light text-sm text-black/80 rounded-md">
+                <span class="">{{question.typeOfQuestion == 1 ? `One correct answer`: `One or more correct
+                    answers`
+                    }}</span>
+            </div>
+            <div v-if="deleteBtn" class="text-right">
+                <FormButton btn-text="Delete" btn-color="red" @click="deleteQuestion(props.index)" />
+            </div>
         </div>
         <div v-if="question.typeOfQuestion == 1">
             <OptionOne :options="question.options" :index="props.index" :correct-one="question.correctOne"

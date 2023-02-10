@@ -207,9 +207,9 @@ const submitQuiz = () => {
                 </div>
             </div>
             <div class="p-2 mb-10">
-                <FormButton :btn-click="addOption" btn-color="sky" btn-text="Add Option" />
+                <FormButton class="my-1" :btn-click="addOption" btn-color="sky" btn-text="Add Option" />
                 <span class="px-2">&nbsp;</span>
-                <FormButton :btn-click="addQuestion" btn-color="indigo" btn-text="Add Question" />
+                <FormButton class="my-1" :btn-click="addQuestion" btn-color="indigo" btn-text="Add Question" />
                 <div v-if="newQuestion.options.length > 0" class="italic mt-5">Options
                     {{ newQuestion.typeOfQuestion == 1 ? '(Select 1 correct option)' : '(Select 1 or more correct options)'}}</div>
                 <div v-if="newQuestion.typeOfQuestion == '1'" class="mt-3 mb-10">
