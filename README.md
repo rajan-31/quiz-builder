@@ -1,6 +1,6 @@
 # Quiz Builder
 
-__*Watch demo video [here](/demo/demo-video.mp4)*__
+__*Watch demo video on [YouTube](https://youtu.be/WQMinmJKZ_c) or download from [here](/demo/demo-video.mp4)*__
 
 <br />
 
